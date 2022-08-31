@@ -24,10 +24,10 @@
 						<a class="nav-link active" aria-current="page" href="{{url_for('dashboard')}}">Dashboard</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="{{url_for('lista_cursos')}}">Vendas</a>
+						<a class="nav-link" href="">Vendas</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="{{url_for('sobre')}}">Esotque</a>
+						<a class="nav-link" href="{{url_for('estoque')}}">Estoque</a>
 					</li>
 					<li class="nav-item dropdown">
 						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
@@ -48,14 +48,12 @@
 									Cruise</a></li>
 						</ul>
 					</li>
-					<li class="nav-item">
-						<a class="nav-link disabled">Disabled</a>
-					</li>
 				</ul>
 			</div>
 		</div>
+		<a href="" style="position: absolute; right: 10%;" class="btn btn-primary">Atualizar</a>
 	</nav>
-	<div class="container">
+	<div class="container-fluid">
 		{% block conteudo %}
 		{% endblock conteudo %}
 	</div>

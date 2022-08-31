@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block conteudo %}
+<h1 style="text-align: center; margin: 30px 0px;">ESTOQUE</h1>
+<hr>
+<br>
+<a href="{{url_for('cria_estoque')}}" class="btn btn-success" style="display:flex; justify-content:center; align-items:center;">ADICIONAR PRODUTO</a>
+<br>
+<table class="table table-bordered table-hover" style="text-align: center;">
+	<thead class="table-dark">
+		<tr>
+			<th scope="col">ID</th>
+			<th scope="col">DESCRIÇÃO</th>
+			<th scope="col">QUANTIDADE</th>
+			<th scope="col">VALOR</th>
+			<th scope="col">AÇÕES</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for produto in produtos.items %}
+		<tr>
+			<td>{{produto.id}}</td>
+			<td>{{produto.descricao}}</td>
+			<td>{{produto.quantidade}}</td>
+			<td>{{produto.valor}} | {{valor}}</td>
+			<td>
+				<a href="{{produto.id}}/atualiza_estoque" class="btn btn-secondary btn-xs">EDITAR</a>
+				<a href="{{produto.id}}/remove_estoque" onclick="return confirm('Deseja excluir esse registro?')" class="btn btn-danger btn-xs">EXCLUIR</a>
+			</td>
+		</tr>
+		{% endfor %}
+
+	</tbody>
+</table>
+{% if produtos.has_prev  %}
+	<a href="{{url_for('estoque', page=produtos.prev_num)}}">ANTERIOR</a>
+{% endif  %}
+{% if produtos.has_next %}
+	<a href="{{url_for('estoque', page=produtos.next_num)}}">PRÓXIMO</a>
+{% endif %}
+{% endblock conteudo %}

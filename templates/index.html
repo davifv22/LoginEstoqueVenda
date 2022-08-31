@@ -1,42 +1,77 @@
 {% extends 'base.html' %}
 {% block conteudo %}
-<h2 style="text-align: center;">Dashboard</h2>
-<hr>
-<main style="display: inline-grid; grid-template-columns: auto auto auto auto; width:100%;">
+<h1 style="text-align: center; margin: 30px 0px;">DASHBOARD</h1>
+<div style="display: inline-grid; grid-template-columns: auto auto auto auto; width:100%; padding-bottom: 50px;">
     <div style="width: 99%; background-color: whitesmoke; border-top: 3px solid blue;">
         <h3 style="text-align: center;">DÉBITO<br><span>💰</span></h3>
-        <input type="number"
+        <label type="number"
             style="text-align: center; width: 100%;font-size: 30px; box-shadow: 0 0 0 0; border: 0 none; outline: 0; background-color:whitesmoke ;"
-            placeholder="R$ 970,00" id="valorCaixa">
-        <details style="position: absolute; font-size: 13px; width: 5px;"><summary></summary>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</details>
+            id="valorCaixa">{{vrDebito}}</label>
+        ℹ️ <i style="text-align: center; font-size: 14px">O mês foi iniciado com esse valor no caixa.</i>
     </div>
 
     <div style="width: 99%; background-color: whitesmoke; border-top: 3px solid green;">
         <h3 style="text-align: center;">VENDAS<br><span>💹</span></h3>
-        <input type="number"
+        <label type="number"
             style="text-align: center; width: 100%;font-size: 30px; box-shadow: 0 0 0 0; border: 0 none; outline: 0; background-color:whitesmoke ;"
-            placeholder="R$ 970,00" id="valorCaixa">
-            <details style="position: absolute;">valor referentevalor referentevalor referentevalor referentevalor referentevalor referentevalor
-                referentevalor referentevalor referentevalor referente</details>
+            id="valorCaixa">{{valorVendaMensal}}</label>
+        ℹ️ <i style="text-align: center; font-size: 14px">Vendas feitas no mês.</i>
     </div>
 
     <div style="width: 99%; background-color: whitesmoke; border-top: 3px solid orange;">
         <h3 style="text-align: center;">COMPRAS<br><span>🛒</span></h3>
-        <input type="number"
+        <label type="number"
             style="text-align: center; width: 100%;font-size: 30px; box-shadow: 0 0 0 0; border: 0 none; outline: 0; background-color:whitesmoke ;"
-            placeholder="R$ 970,00" id="valorCaixa">
-            <details style="position: absolute;">valor referentevalor referentevalor referentevalor referentevalor referentevalor referentevalor
-                referentevalor referentevalor referentevalor referente</details>
+            id="valorCaixa">{{vrCompraMensal}}</label>
+        ℹ️ <i style="text-align: center; font-size: 14px">Compras feitas no mês.</i>
     </div>
 
     <div style="width: 100%; background-color: whitesmoke; border-top: 3px solid red;">
         <h3 style="text-align: center;">TOTAL<br><span>⚖️</span></h3>
-        <input type="number"
+        <label type="number"
             style="text-align: center; width: 100%;font-size: 30px; box-shadow: 0 0 0 0; border: 0 none; outline: 0; background-color:whitesmoke ;"
-            placeholder="R$ 970,00" id="valorCaixa">
-            <details style="position: absolute;">valor referentevalor referentevalor referentevalor referentevalor referentevalor referentevalor
-                referentevalor referentevalor referentevalor referente</details>
+            id="valorCaixa">{{vrTotal}}</label>
+        ℹ️ <i style="text-align: center; font-size: 14px">Valor final ao fechar o mês.</i>
     </div>
-</main>
+</div>
+<hr>
+<div style="text-align: center; width: 100%; display: inline-grid; grid-template-columns: 50% 50%;">
+    <div>
+        <h3>Últimos lançamentos</h3>
+        <table class="table table-bordered table-hover" style="width: 100%; text-align: center;">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">DESCRIÇÃO</th>
+                    <th scope="col">QUANTIDADE</th>
+                    <th scope="col">VALOR</th>
+                    <th scope="col">AÇÕES</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for produto in produtos.items %}
+                <tr>
+                    <td>{{produto.id}}</td>
+                    <td>{{produto.descricao}}</td>
+                    <td>{{produto.quantidade}}</td>
+                    <td>{{produto.valor}}</td>
+                    <td>
+                        <a href="{{produto.id}}/atualiza_estoque" class="btn btn-secondary btn-xs">EDITAR</a>
+                        <a href="{{produto.id}}/remove_estoque"
+                            onclick="return confirm('Deseja excluir esse registro?')"
+                            class="btn btn-danger btn-xs">EXCLUIR</a>
+                    </td>
+                </tr>
+                {% endfor %}
+
+            </tbody>
+        </table>
+        <a href="{{url_for('estoque')}}" style="top: 0px;">VER TODOS OS LANÇAMENTOS</a>
+    </div>
+    <div>
+        <h3>Gráficos</h3>
+    </div>
+</div>
+
 
 {% endblock conteudo %}

@@ -1,48 +1,117 @@
+from genericpath import exists
+from types import NoneType
 from flask import Flask, render_template, request, redirect, url_for, flash
 import urllib.request
 import json
 from flask_sqlalchemy import SQLAlchemy
+import webbrowser
 
 app = Flask(__name__)
-
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///cursos.sqlite3'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///banco.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config['SECRET_KEY'] = "random string"
 
 db = SQLAlchemy(app)
 
-frutas = []
-registros = []
 
-
-class cursos(db.Model):
+class operadores(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(50))
-    descricao = db.Column(db.String(100))
-    ch = db.Column(db.Integer)
+    username = db.Column(db.String(50))
+    password = db.Column(db.String(50))
+    situacao = db.Column(db.String(1))
+    data_cadastro = db.Column(db.String(50))
 
-    def __init__(self, nome, descricao, ch):
+    def __init__(self, nome, username, password, situacao, data_cadastro):
         self.nome = nome
+        self.username = username
+        self.password = password
+        self.situacao = situacao
+        self.data_cadastro = data_cadastro
+
+
+class produtos(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    descricao = db.Column(db.String(50))
+    quantidade = db.Column(db.Integer)
+    valor = db.Column(db.REAL)
+
+    def __init__(self, descricao, quantidade, valor):
         self.descricao = descricao
-        self.ch = ch
+        self.quantidade = quantidade
+        self.valor = valor
+
+
+class produtos_vendidos(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    descricao = db.Column(db.String(50))
+    quantidade = db.Column(db.Integer)
+    valor = db.Column(db.REAL)
+    data_venda = db.Column(db.String(50))
+
+    def __init__(self, descricao, quantidade, valor, data_venda):
+        self.descricao = descricao
+        self.quantidade = quantidade
+        self.valor = valor
+        self.data_venda = data_venda
+
+
+class produtos_comprados(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    descricao = db.Column(db.String(50))
+    quantidade = db.Column(db.Integer)
+    valor = db.Column(db.REAL)
+    data_compra = db.Column(db.String(50))
+
+    def __init__(self, descricao, quantidade, valor, data_compra):
+        self.descricao = descricao
+        self.quantidade = quantidade
+        self.valor = valor
+        self.data_compra = data_compra
 
 
 @app.route('/', methods=["GET", "POST"])
+def login():
+    username = request.form.get('username')
+    password = request.form.get('password')
+    if username is None:
+        redirect(url_for('login'))
+    login_query = operadores.query.filter_by(username=username).first()
+    user_query = login_query
+    if user_query is None:
+        redirect(url_for('login'))
+    else:
+        return redirect(url_for('index.html'))
+    return render_template("login.html")
+
+
+@app.route('/index', methods=["GET", "POST"])
 def dashboard():
-    #frutas = ["Morango", "Uva", "Laranja", "Mamão", "Maçã", "Pêra", "Melão", "Abacaxi"]
-    if request.method == "POST":
-        if request.form.get("fruta"):
-            frutas.append(request.form.get("fruta"))
-    return render_template("index.html", frutas=frutas)
+    page = request.args.get('page', 1, type=int)
+    per_page = 5
+    todos_produtos = produtos.query.paginate(page, per_page)
 
+    vrDebito_query = 5000.0
+    vrDebito = f'R${vrDebito_query:.2f}'
+    vrDebito = vrDebito = f'R$ {vrDebito_query:.2f}'.replace('.', ',')
 
-@app.route('/sobre', methods=["GET", "POST"])
-def sobre():
-    #notas = {"Fulano":5.0, "Beltrano":6.0, "Aluno": 7.0, "Sicrano":8.5, "Rodrigo":9.5}
-    if request.method == "POST":
-        if request.form.get("aluno") and request.form.get("nota"):
-            registros.append({"aluno": request.form.get(
-                "aluno"), "nota": request.form.get("nota")})
-    return render_template("sobre.html", registros=registros)
+    vrVendaMensal_query = db.session.query(
+        db.func.sum(produtos_vendidos.valor)).scalar()
+    vrVendaMensal = f'R${vrVendaMensal_query:.2f}'
+    vrVendaMensal = vrVendaMensal = f'R$ {vrVendaMensal_query:.2f}'.replace(
+        '.', ',')
+
+    vrCompraMensal_query = db.session.query(
+        db.func.sum(produtos_comprados.valor)).scalar()
+    vrCompraMensal = f'R${vrCompraMensal_query:.2f}'
+    vrCompraMensal = vrCompraMensal = f'R$ {vrCompraMensal_query:.2f}'.replace(
+        '.', ',')
+
+    vrTotal_query = vrDebito_query + vrVendaMensal_query - vrCompraMensal_query
+    vrTotal = f'R${vrTotal_query:.2f}'
+    vrTotal = vrTotal = f'R$ {vrTotal_query:.2f}'.replace('.', ',')
+
+    return render_template("index.html", produtos=todos_produtos, vrDebito=vrDebito, valorVendaMensal=vrVendaMensal, vrCompraMensal=vrCompraMensal, vrTotal=vrTotal)
 
 
 @app.route('/filmes/<propriedade>')
@@ -63,53 +132,55 @@ def filmes(propriedade):
     return render_template("filmes.html", filmes=jsondata['results'])
 
 
-@app.route('/cursos')
-def lista_cursos():
+@app.route('/estoque')
+def estoque():
     page = request.args.get('page', 1, type=int)
-    per_page = 4
-    todos_cursos = cursos.query.paginate(page, per_page)
-    return render_template("cursos.html", cursos=todos_cursos)
+    per_page = 10
+    todos_produtos = produtos.query.paginate(page, per_page)
+    return render_template("estoque.html", produtos=todos_produtos)
 
 
-@app.route('/cria_curso', methods=["GET", "POST"])
-def cria_curso():
-    nome = request.form.get('nome')
+@app.route('/cria_estoque', methods=["GET", "POST"])
+def cria_estoque():
     descricao = request.form.get('descricao')
-    ch = request.form.get('ch')
+    quantidade = request.form.get('quantidade')
+    valor = request.form.get('valor')
+
     if request.method == 'POST':
-        if not nome or not descricao or not ch:
+        if not descricao or not quantidade or not valor:
             flash("Preencha todos os campos do formulário", "error")
         else:
-            curso = cursos(nome, descricao, ch)
-            db.session.add(curso)
+            produto = produtos(str(descricao), quantidade, valor)
+            db.session.add(produto)
             db.session.commit()
-            return redirect(url_for('lista_cursos'))
-    return render_template("novo_curso.html")
+            return redirect(url_for('estoque'))
+    return render_template("cria_estoque.html")
 
 
-@app.route('/<int:id>/atualiza_curso', methods=['GET', 'POST'])
-def atualiza_curso(id):
-    curso = cursos.query.filter_by(id=id).first()
+@app.route('/<int:id>/atualiza_estoque', methods=['GET', 'POST'])
+def atualiza_estoque(id):
+    produto = produtos.query.filter_by(id=id).first()
     if request.method == 'POST':
-        nome = request.form["nome"]
         descricao = request.form["descricao"]
-        ch = request.form["ch"]
+        quantidade = request.form["quantidade"]
+        valor = request.form["valor"]
 
-        cursos.query.filter_by(id=id).update(
-            {"nome": nome, "descricao": descricao, "ch": ch})
+        produtos.query.filter_by(id=id).update(
+            {"descricao": descricao, "quantidade": quantidade, "valor": valor})
         db.session.commit()
-        return redirect(url_for('lista_cursos'))
-    return render_template("atualiza_curso.html", curso=curso)
+        return redirect(url_for('estoque'))
+    return render_template("atualiza_estoque.html", produto=produto)
 
 
-@app.route('/<int:id>/remove_curso')
-def remove_curso(id):
-    curso = cursos.query.filter_by(id=id).first()
-    db.session.delete(curso)
+@app.route('/<int:id>/remove_estoque')
+def remove_estoque(id):
+    produto = produtos.query.filter_by(id=id).first()
+    db.session.delete(produto)
     db.session.commit()
-    return redirect(url_for('lista_cursos'))
+    return redirect(url_for('estoque'))
 
 
 if __name__ == "__main__":
     db.create_all()
+    webbrowser.open("http://127.0.0.1:5000/")
     app.run(debug=True)
