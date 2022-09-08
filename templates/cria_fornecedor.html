@@ -1,0 +1,20 @@
+{% extends 'home.html' %}
+{% block content %}
+<h1 style="text-align: center;">CADASTRAR FORNECEDOR</h1>
+<hr>
+{%- for mensagem in get_flashed_messages() %}
+<div class="alert alert-danger">
+	{{mensagem}}
+</div>
+{%- endfor %}
+<form action="/cria_fornecedor" method="POST" class="form-control">
+	<label>NOME</label>
+	<input class="form-control" type="text" name="nome_fornecedor" placeholder="Descrição" required>
+	<label>E-MAIL</label>
+	<input class="form-control" type="text" name="email" placeholder="Valor" required>
+	<label>TELEFONE/CELULAR</label>
+	<input class="form-control" type="number" name="tel_cel" placeholder="Quantidade" required> <br>
+	<button class="btn btn-success">ADICIONAR</button>
+	<a href="/fornecedores" class="btn btn-secondary btn-xs">VOLTAR</a>
+</form>
+{% endblock content %}

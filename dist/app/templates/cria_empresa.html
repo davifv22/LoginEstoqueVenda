@@ -1,0 +1,42 @@
+{% extends 'home.html' %}
+{% block content %}
+<h1 style="text-align: center;">EMPRESA</h1>
+<hr>
+<br>
+<table class="table table-bordered table-hover" style="text-align: center;">
+	<thead class="table-dark">
+		<tr>
+			<th scope="col">ID</th>
+			<th scope="col">NOME DA EMPRESA</th>
+			<th scope="col">CNPJ/CPF</th>
+			<th scope="col">ENDEREÇO</th>
+			<th scope="col">DATA CADASTRO</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for dados in dados.items %}
+		<tr>
+			<td>{{dados.id}}</td>
+			<td>{{dados.nome_empresa}}</td>
+			<td>{{dados.cnpj_cpf}}</td>
+			<td>{{dados.endereco}}</td>
+			<td>{{dados.data_cadastro}}</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+<td>
+	<a href="/empresa" class="btn btn-secondary btn-xs" style="margin-bottom: 15px;">VOLTAR</a>
+</td>
+<form action="/cria_empresa" method="POST" class="form-control">
+	<label>NOME DA EMPRESA</label>
+	<input class="form-control" type="text" name="nome_empresa" value="{{nome.nome_empresa}}" required>
+	<label>CNPJ/CPF</label>
+	<input class="form-control" type="text" name="cnpj_cpf" value="{{nome.cnpj_cpf}}" required>
+	<label>ENDEREÇO</label>
+	<input class="form-control" type="text" min="1" step="any" name="endereco" value="{{nome.endereco}}" required>
+	<button class="btn btn-success" style="margin: 10px 0px;">ATUALIZAR</button>
+</form>
+
+
+{% endblock content %}

@@ -1,0 +1,35 @@
+{% extends 'home.html' %}
+{% block content %}
+<h1 style="text-align: center;">OPERADORES</h1>
+<hr>
+<a href="/cria_operador" class="btn btn-success">CADASTRAR OPERADOR</a>
+<br>
+<br>
+<table class="table table-bordered table-hover" style="text-align: center;">
+	<thead class="table-dark">
+		<tr>
+			<th scope="col">ID</th>
+			<th scope="col">NOME</th>
+			<th scope="col">E-MAIL</th>
+			<th scope="col">SITUAÇÃo</th>
+			<th scope="col">AÇÕES</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for dados in dados.items %}
+		<tr>
+			<td>{{dados.id}}</td>
+			<td>{{dados.username}}</td>
+			<td>{{dados.email}}</td>
+			<td>{{dados.situacao}}</td>
+			<td>
+				<a href="{{dados.id}}/atualiza_operador" class="btn btn-primary">EDITAR</a>
+				<a href="{{dados.id}}/remove_operador" onclick="return confirm('Deseja excluir esse registro?')"
+					class="btn btn-danger btn-xs">EXCLUIR</a>
+			</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+
+{% endblock content %}

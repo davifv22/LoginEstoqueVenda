@@ -1,0 +1,125 @@
+{% extends 'home.html' %}
+{% block content %}
+<h1 style="text-align: center;">VENDAS</h1>
+<hr>
+<div style="display:flex; grid-template-columns: auto auto auto auto; padding: 30px 0px;">
+    <div style="width: 30%; background-color: whitesmoke; border-top: 3px solid green;"><br>
+        <h2 style="text-align: center;">CAIXA<br><span>💰</span></h2>
+        <label type="number" style="text-align: center; width: 100%; font-size: 32px;
+         box-shadow: 0 0 0 0; border: 0 none; outline: 0; background-color:whitesmoke ;" id="valorCaixa">
+            {{vrCaixa}}</label>
+        ℹ️ <i style="text-align: center; font-size: 14px; margin-bottom: 0;">Lançamentos de vendas feitos no dia.</i>
+    </div>
+    <div style="width: 30%; background-color: whitesmoke; border-top: 3px solid green;">
+        <h3 style="text-align: center;">PRODUTOS <br> VENDIDOS<br><span>💰</span></h3>
+        <label type="hidden" style="text-align: center; width: 100%; font-size: 32px;
+         box-shadow: 0 0 0 0; border: 0 none; outline: 0; background-color:whitesmoke ;" id="valorCaixa">
+            {{qtde_vendidos}}</label>
+        ℹ️ <i style="text-align: center; font-size: 14px">Quantidade de produtos vendidos no dia.</i>
+    </div>
+    <div style="width: 1%;"></div>
+    <form action="{{url_for('post_vendas_caixa', data_caixa=caixa_query.data_caixa)}}" method="POST"
+        style="width: 40%;">
+        <h6>DATA:</h6>
+        <select name="data_caixa" class="form-select" aria-label="Default select example">
+            <option selected>{{caixa_query.data_caixa}}</option>
+            {% for data in dtCaixa %}
+            <option value="{{data.data_caixa}}">{{data.data_caixa}}</option>
+            {% endfor %}
+        </select>
+        <h6>SITUAÇÃO DO CAIXA:</h6>
+        <label type="text"
+            style="width: 100%; text-align: center; font-size: 23px; border: 1px solid gainsboro; border-radius: 3px;"
+            id="situacao"> {{caixa_query.situacao}} </label><br><br>
+        <button class="btn btn-primary" style="width: 33%;">BUSCAR DADOS</button>
+        <a href="/vendas/{{caixa_query.data_caixa}}/abrir" onclick="return confirm('Deseja abrir o caixa?')" class="btn btn-success" style="width: 32%;">ABRIR
+            CAIXA</a>
+        <a href="/vendas/{{caixa_query.data_caixa}}/fechar" onclick="return confirm('Deseja fechar o caixa?')" class="btn btn-danger btn-xs"
+            style="width: 32%;">FECHAR CAIXA</a>
+    </form>
+</div>
+
+<label style="margin: 20px 0px;text-align: center; border: solid 1px gainsboro; border-radius: 5px; font-size: 23px; width: 100%; color: white; background-color: black;">DATA SELECIONADA: {{caixa_query.data_caixa}}</label>
+
+<div style="display:flex; grid-template-columns: 49.5% 1% 49.5%;">
+    <form action="{{url_for('post_vendas_lancar', data_caixa=caixa_query.data_caixa)}}" method="POST" style="width: 50%;">
+        <h3 style="width: 100%; text-align: center;">LANÇAR ITENS</h3>
+        <h6>PRODUTO:</h6>
+        <select name="descricao" class="form-select" aria-label="Default select example">
+            <option selected></option>
+            {% for descricao in produtos %}
+            <option value="{{descricao.descricao}}">{{descricao.descricao}}</option>
+            {% endfor %}
+        </select>
+        <h6>QNTDE:</h6>
+        <input class="form-control" type="number" min="1" value="1" name="quantidade" id="">
+        <h6>CLIENTE:</h6>
+        <select name="nome_cliente" class="form-select" aria-label="Default select example">
+            <option selected></option>
+            {% for nome_cliente in clientes %}
+            <option value="{{nome_cliente.nome_cliente}}">{{nome_cliente.nome_cliente}}</option>
+            {% endfor %}
+        </select>
+        <h6>TIPO DE PAGTO:</h6> 
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="tipo_pagto" id="exampleRadios1" value="DINHEIRO" checked>
+            <label class="form-check-label" for="exampleRadios1">DINHEIRO</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="tipo_pagto" id="exampleRadios2" value="CARTÃO DÉBITO">
+            <label class="form-check-label" for="exampleRadios2">DÉBITO</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="tipo_pagto" id="exampleRadios2" value="CARTÃO CRÉDITO">
+            <label class="form-check-label" for="exampleRadios2">CRÉDITO</label>
+        </div><br>
+        <button class="btn btn-success" style="width: 100%;">ADICIONAR ITEM</button>
+    </form>
+    <div style="border: solid 0.5px gainsboro; margin: 0px 15px;"></div>
+    <div style="width: 50%;">
+        <h3 style="width: 100%; text-align: center;">ITENS LANÇADOS</h3>
+        <table class="table" style="text-align: center;">
+            <thead class="table-dark" style="font-size: 12px">
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">ITEM</th>
+                    <th scope="col">TIPO PAGTO</th>
+                    <th scope="col">VALOR UN</th>
+                    <th scope="col">QNTDE</th>
+                    <th scope="col">VALOR TOTAL</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for produto in produtos_lancados.items %}
+                <tr>
+                    <td>{{produto.id}}</td>
+                    <td>{{produto.descricao}}</td>
+                    <td>{{produto.tipo_pagto}}</td>
+                    <td>R$ {{produto.valor_un}}</td>
+                    <td>{{produto.quantidade}}</td>
+                    <td>R$ {{produto.valor_total}}</td>
+                </tr>
+                {% endfor %}
+                <tr style="background-color:rgba(185, 0, 0, 0.747);">
+                    <td>TOTAL:</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>{{qtde_lancados}}</td>
+                    <td>{{total_lancados}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <a href="/vendas/{{caixa_query.data_caixa}}/baixar" onclick="return confirm('Deseja baixar os itens em lançamentos?')"  class="btn btn-success" style="width: 49%;">BAIXAR</a>
+        <a href="/vendas/{{caixa_query.data_caixa}}/limpar" onclick="return confirm('Deseja limpar os itens em lançamentos?')" class="btn btn-danger" style="width: 50%;">LIMPAR</a>
+        <form action="/vendas/{{caixa_query.data_caixa}}/adddesconto" method="POST">
+            <h6>DESCONTO:</h6>
+            <div class="input-group mb-3">
+                <span class="input-group-text">%</span>
+                <input name="desconto" type="number" class="form-control">
+            <button class="btn btn-primary" style="width: 32%;">ADD DESCONTO</button>
+            </div>
+            </form>
+    </div>
+</div>
+{% endblock content %}

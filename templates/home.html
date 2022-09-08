@@ -1,0 +1,66 @@
+{% extends 'layout.html' %}
+{% block content_login %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>{{nome.nome_empresa}}</title>
+</head>
+
+<body>
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+		<div class="container-fluid">
+			<a class="navbar-brand" href="" style="padding-right: 60px; text-align: center;">{{nome.nome_empresa}}</a>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+				data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+					<li class="nav-item">
+						<a class="nav-link active" aria-current="page" href="{{url_for('get_dashboard')}}">Dashboard</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/vendas/{{date}}">Vendas</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="{{url_for('get_compras')}}">Compras</a>
+					</li>
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+							data-bs-toggle="dropdown" aria-expanded="false">Cadastros</a>
+						<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+							<li><a class="dropdown-item" href="{{url_for('get_empresa')}}">Empresa</a></li>
+							<li><a class="dropdown-item" href="{{url_for('get_operadores')}}">Operadores</a></li>
+							<li><a class="dropdown-item" href="{{url_for('get_estoque')}}">Estoque</a></li>
+							<li><a class="dropdown-item" href="{{url_for('get_clientes')}}">Clientes</a>
+							<li><a class="dropdown-item" href="{{url_for('get_fornecedores')}}">Fornecedores</a>
+							</li>
+							<li>
+								<hr class="dropdown-divider">
+							</li>
+							<li><a class="dropdown-item" href="{{url_for('get_parametrizacao')}}">Parametrização</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<h6 style="width: 200px; color: rgb(212, 212, 212); text-align: center; font-size: 13px;">{{date}}</h6>
+		<h6 style="width: 200px; color: rgb(212, 212, 212); text-align: center; font-size: 13px;">Bem
+			vindo,<br> {{user}}!</h6>
+		<a style="margin: 0px 10px;" href="" role="button">Atualizar</a>
+		<a style="margin: 0px 15px;" href="/logout" role="button">Sair</a>
+	</nav>
+	<main style="padding: 20px">
+		{% block content %}{% endblock %}
+	</main>
+</body>
+
+</html>
+{% endblock %}

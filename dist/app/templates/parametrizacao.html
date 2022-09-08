@@ -1,0 +1,10 @@
+{% extends 'home.html' %}
+{% block content %}
+<h1 style="text-align: center;">PARAMETRIZAÇÃO</h1>
+<hr>
+<form action="{{url_for('post_parametrizacao')}}" method="POST" class="form-control">
+	<label>DÉBITO</label>
+	<input class="form-control" type="text" name="debito_atual" placeholder="{{vrDebito}}" required><br>
+	<button class="btn btn-success">ATUALIZAR</button>
+</form>
+{% endblock content %}

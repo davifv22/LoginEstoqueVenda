@@ -1,0 +1,45 @@
+{% extends 'home.html' %}
+{% block content %}
+<h1 style="text-align: center;">FORNECEDORES</h1>
+<hr>
+<a href="/cria_fornecedor" class="btn btn-success">CADASTRAR FORNECEDOR</a>
+<br>
+<br>
+<table class="table table-bordered table-hover" style="text-align: center;">
+	<thead class="table-dark">
+		<tr>
+			<th scope="col">ID</th>
+			<th scope="col">NOME</th>
+			<th scope="col">E-MAIL</th>
+			<th scope="col">TELEFONE/CELULAR</th>
+			<th scope="col">SITUACAO</th>
+			<th scope="col">DATA CADASTRO</th>
+			<th scope="col">AÇÕES</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for fornecedor in fornecedores.items %}
+		<tr>
+			<td>{{fornecedor.id}}</td>
+			<td>{{fornecedor.nome_fornecedor}}</td>
+			<td>{{fornecedor.email}}</td>
+			<td>{{fornecedor.tel_cel}}</td>
+			<td>{{fornecedor.situacao}}</td>
+			<td>{{fornecedor.data_cadastro}}</td>
+			<td>
+				<a href="{{fornecedor.id}}/atualiza_fornecedor" class="btn btn-primary">EDITAR</a>
+				<a href="{{fornecedor.id}}/remove_fornecedor" onclick="return confirm('Deseja excluir esse registro?')"
+					class="btn btn-danger btn-xs">EXCLUIR</a>
+			</td>
+		</tr>
+		{% endfor %}
+
+	</tbody>
+</table>
+{% if fornecedores.has_prev %}
+<a href="{{url_for('fornecedores', page=fornecedores.prev_num)}}">ANTERIOR</a>
+{% endif %}
+{% if fornecedores.has_next %}
+<a href="{{url_for('fornecedores', page=fornecedores.next_num)}}">PRÓXIMO</a>
+{% endif %}
+{% endblock content %}

@@ -1,0 +1,46 @@
+{% extends 'home.html' %}
+{% block content %}
+<h1 style="text-align: center;">OPERADORES</h1>
+<hr>
+<br>
+<table class="table table-bordered table-hover" style="text-align: center;">
+	<thead class="table-dark">
+		<tr>
+			<th scope="col">ID</th>
+			<th scope="col">NOME</th>
+			<th scope="col">E-MAIL</th>
+			<th scope="col">SITUACAO</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for dados in dados.items %}
+		<tr>
+			<td>{{dados.id}}</td>
+			<td>{{dados.username}}</td>
+			<td>{{dados.email}}</td>
+			<td>{{dados.situacao}}</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+<td>
+	<a href="/operadores" class="btn btn-secondary btn-xs" style="margin-bottom: 15px;">VOLTAR</a>
+</td>
+<form action="{{url_for('get_atualiza_operador', id=operador.id)}}" method="POST" class="form-control">
+	<label>NOME</label>
+	<input class="form-control" type="text" name="username" value="{{operador.username}}" required>
+	<label>E-MAIL</label>
+	<input class="form-control" type="text" name="email" value="{{operador.email}}" required>
+	<label>SENHA</label>
+	<input class="form-control" type="text" min="1" step="any" name="password" required>
+	<label>SITUAÇÃO</label><br>
+	<select name="situacao" class="form-select" aria-label="Default select example">
+		{% for sin in situacao %}
+		<option value="{{sin.situacao}}">{{sin.situacao}}</option>
+		{% endfor %}
+	</select><br>
+	<button class="btn btn-success" style="margin: 10px 0px;">ATUALIZAR</button>
+</form><BR>
+
+
+{% endblock content %}

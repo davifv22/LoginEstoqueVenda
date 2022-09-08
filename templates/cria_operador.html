@@ -1,0 +1,40 @@
+{% extends 'home.html' %}
+{% block content %}
+<h1 style="text-align: center;">CADASTRAR OPERADOR</h1>
+<hr>
+<br>
+<table class="table table-bordered table-hover" style="text-align: center;">
+	<thead class="table-dark">
+		<tr>
+			<th scope="col">ID</th>
+			<th scope="col">NOME</th>
+			<th scope="col">E-MAIL</th>
+			<th scope="col">SITUACAO</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for dados in dados.items %}
+		<tr>
+			<td>{{dados.id}}</td>
+			<td>{{dados.username}}</td>
+			<td>{{dados.email}}</td>
+			<td>{{dados.situacao}}</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+<td>
+	<a href="/operadores" class="btn btn-secondary btn-xs" style="margin-bottom: 15px;">VOLTAR</a>
+</td>
+<form action="/cria_operador" method="POST" class="form-control">
+	<label>NOME</label>
+	<input class="form-control" type="text" name="username" placeholder="Nome operador" required>
+	<label>E-MAIL</label>
+	<input class="form-control" type="text" name="email" placeholder="E-mail" required>
+	<label>SENHA</label>
+	<input class="form-control" type="text" min="1" step="any" name="password" placeholder="*******" required><br>
+	<button class="btn btn-success" style="margin: 10px 0px;">ADICIONAR</button>
+</form>
+
+
+{% endblock content %}

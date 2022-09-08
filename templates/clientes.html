@@ -1,0 +1,43 @@
+{% extends 'home.html' %}
+{% block content %}
+<h1 style="text-align: center;">CLIENTES</h1>
+<hr>
+<a href="/cria_cliente" class="btn btn-success">CADASTRAR CLIENTE</a>
+<br>
+<br>
+<table class="table table-bordered table-hover" style="text-align: center;">
+	<thead class="table-dark">
+		<tr>
+			<th scope="col">ID</th>
+			<th scope="col">NOME CLIENTE</th>
+			<th scope="col">E-MAIL</th>
+			<th scope="col">TELEFONE/CELULAR</th>
+			<th scope="col">DATA CADASTRO</th>
+			<th scope="col">AÇÕES</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for cliente in clientes.items %}
+		<tr>
+			<td>{{cliente.id}}</td>
+			<td>{{cliente.nome_cliente}}</td>
+			<td>{{cliente.email}}</td>
+			<td>{{cliente.tel_cel}}</td>
+			<td>{{cliente.data_cadastro}}</td>
+			<td>
+				<a href="{{cliente.id}}/atualiza_cliente" class="btn btn-primary">EDITAR</a>
+				<a href="{{cliente.id}}/remove_cliente" onclick="return confirm('Deseja excluir esse registro?')"
+					class="btn btn-danger btn-xs">EXCLUIR</a>
+			</td>
+		</tr>
+		{% endfor %}
+
+	</tbody>
+</table>
+{% if clientes.has_prev %}
+<a href="{{url_for('clientes', page=cliente.prev_num)}}">ANTERIOR</a>
+{% endif %}
+{% if clientes.has_next %}
+<a href="{{url_for('clientes', page=cliente.next_num)}}">PRÓXIMO</a>
+{% endif %}
+{% endblock content %}

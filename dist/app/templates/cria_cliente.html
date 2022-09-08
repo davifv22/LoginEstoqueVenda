@@ -1,0 +1,21 @@
+{% extends 'home.html' %}
+{% block content %}
+<h1 style="text-align: center;">CADASTRAR CLIENTE</h1>
+<hr>
+{%- for mensagem in get_flashed_messages() %}
+<div class="alert alert-danger">
+	{{mensagem}}
+</div>
+{%- endfor %}
+<form action="/cria_cliente" method="POST" class="form-control">
+	<label>NOME</label>
+	<input class="form-control" type="text" name="nome_cliente" placeholder="Nome completo" required>
+	<label>E-MAIL</label>
+	<input class="form-control" type="text" name="email" placeholder="mail@mail.com" required>
+	<label>TELEFONE/CELULAR</label>
+	<input class="form-control" type="number" min="1" step="any" name="tel_cel" placeholder="( ) _____-____" required>
+	<br>
+	<button class="btn btn-success">ADICIONAR</button>
+	<a href="/clientes" class="btn btn-secondary btn-xs">VOLTAR</a>
+</form>
+{% endblock content %}
